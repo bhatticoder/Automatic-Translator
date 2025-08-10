@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Real-Time Translator</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>🌐 Real-Time Translator</h2>
+    <!-- Add History button -->
+    <div style="margin-bottom: 20px;">
+      <a href="/history" style="text-decoration:none; background:#007BFF; color:white; padding:8px 16px; border-radius:5px;">
+        📜 View Translation History
+      </a>
+    </div>
+    
+    <div class="lang-select">
+      <label for="fromLang">From:</label>
+      <select id="fromLang"></select>
+
+      <button id="swapBtn" title="Swap Languages">⇄</button>
+
+      <label for="toLang">To:</label>
+      <select id="toLang"></select>
+    </div>
+
+    <button id="clearTextBtn" type="button">Clear Text</button>
+    <button id="translateTextBtn" type="button">Copy Text</button>
+
+    <!-- Input textarea with mic button -->
+    <label for="inputText">Type here:</label>
+    <div style="display: flex; align-items: center;">
+      <textarea id="inputText" placeholder="Start typing to translate..." style="flex: 1;"></textarea>
+    </div>
+    <button id="micBtn" title="Start Voice Input" style="background:#0b07ff; color:#000; margin-top:5px;">
+      🎤 Start Speaking
+    </button>
+    <!-- Output textarea with speaker button -->
+    <label for="outputText">Translation:</label>
+    <div style="display: flex; align-items: center;">
+      <textarea id="outputText" readonly placeholder="Translation will appear here..." style="flex: 1;"></textarea>
+    </div>
+    <!-- File upload section -->
+    <label for="fileUpload">Upload PDF or Word file:</label>
+    <input type="file" id="fileUpload" name="fileUpload" accept=".pdf,.doc,.docx">
+
+    <label for="fileTargetLang">Translate file to:</label>
+    <select id="fileTargetLang" name="fileTargetLang"></select>
+
+    <button id="translateFileBtn" type="button">Translate File</button>
+    <button id="clearFileBtn" type="button">Clear File</button>
+
+    <!-- Translated file output -->
+    <label for="translatedText">Translated Text:</label>
+    <textarea id="translatedText" rows="10" style="width:100%;" readonly></textarea>
+
+    <a id="downloadPdfBtn" href="#" style="display:none; margin-top:10px;" class="button">Download as PDF</a>
+    <a id="downloadDocxBtn" href="#" style="display:none; margin-top:10px;" class="button">Download as DOCX</a>
+
+    <!-- Loading -->
+    <div id="loading" style="display:none; text-align:center; margin:10px;">
+      <span>Translating file...</span>
+      <span class="loader"></span>
+    </div>
+  </div>
+  <script src="/static/scripting.js"></script>
+</body>
+</html>

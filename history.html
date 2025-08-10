@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Translation History</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0f8ff;
+        padding: 30px;
+        max-width: 800px;
+        margin: auto;
+    }
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        margin-bottom: 12px;
+        background: #fff;
+        padding: 12px 16px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: background-color 0.2s ease;
+        display: flex;
+        align-items: center;
+    }
+    li:hover {
+        background-color: #e6f0ff;
+    }
+    a {
+        text-decoration: none;
+        color: #007BFF;
+        font-weight: 600;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .meta {
+        font-size: 0.85em;
+        color: #555;
+        margin-top: 4px;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #007BFF;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    .delete-btn {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: none;
+    }
+    .undo-popup {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #2501a8;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        display: none;
+    }
+    .undo-popup button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        margin-left: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<!-- Go back to index.html -->
+<a href="/" class="back-link">⬅ Back to Home</a>
+
+<h1>📜 Translation History</h1>
+
+{% if history %}
+    <button class="delete-btn" id="deleteSelectedBtn">Delete Selected</button>
+    <ul id="historyList">
+        {% for item in history %}
+            <li data-id="{{ item.id }}" data-timestamp="{{ item.timestamp }}">
+                <input type="checkbox" class="select-history" />
+                <a href="/history/{{ item.id }}" title="{{ item.original }}">
+                    {{ item.type|capitalize }} | {{ item.from }} → {{ item.to }} | 
+                    {{ item.original[:60] }}{% if item.original|length > 60 %}...{% endif %}
+                </a>
+                {% if item.type == 'file' and item.filename %}
+                <div class="meta">File: {{ item.filename }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No translation history yet.</p>
+{% endif %}
+
+<div class="undo-popup" id="undoPopup">
+    <span>History deleted.</span>
+    <button id="undoBtn">Undo</button>
+</div>
+
+<script>
+const deleteBtn = document.getElementById('deleteSelectedBtn');
+const undoPopup = document.getElementById('undoPopup');
+const undoBtn = document.getElementById('undoBtn');
+let deletedItems = [];
+let undoTimer = null;
+
+// Show/hide delete button
+document.querySelectorAll('.select-history').forEach(cb => {
+    cb.addEventListener('change', () => {
+        const anyChecked = document.querySelectorAll('.select-history:checked').length > 0;
+        deleteBtn.style.display = anyChecked ? 'block' : 'none';
+    });
+});
+
+// Delete selected items
+deleteBtn.addEventListener('click', () => {
+    deletedItems = [];
+    document.querySelectorAll('.select-history:checked').forEach(cb => {
+        const li = cb.closest('li');
+        deletedItems.push(li);
+        li.style.display = 'none';
+    });
+
+    undoPopup.style.display = 'flex';
+    undoTimer = setTimeout(() => {
+        permanentlyDelete();
+        undoPopup.style.display = 'none';
+    }, 3000);
+});
+
+// Undo delete
+undoBtn.addEventListener('click', () => {
+    clearTimeout(undoTimer);
+    deletedItems.forEach(li => li.style.display = 'flex');
+    deletedItems = [];
+    undoPopup.style.display = 'none';
+});
+
+// Permanently delete from server
+function permanentlyDelete() {
+    const ids = deletedItems.map(li => li.dataset.id);
+    fetch('/delete_history', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ ids })
+    }).then(res => res.json()).then(() => {
+        deletedItems.forEach(li => li.remove());
+        deletedItems = [];
+    });
+}
+
+</script>
+</body>
+</html>

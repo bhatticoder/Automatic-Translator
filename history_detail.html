@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation Detail</title>
+    <style>
+        body { font-family: Arial; background: #f0f8ff; padding: 30px; max-width: 700px; margin: auto;}
+        h1, h2 { color: #333; }
+        .section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            white-space: pre-wrap; /* preserve newlines */
+        }
+        a.back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a.back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="/history" class="back-link">← Back to History</a>
+    <h1>Translation Details</h1>
+    
+    <div class="section">
+        <h2>Type</h2>
+        <p>{{ entry.type|capitalize }}</p>
+    </div>
+
+    {% if entry.type == 'file' %}
+    <div class="section">
+        <h2>Filename</h2>
+        <p>{{ entry.filename }}</p>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <h2>Languages</h2>
+        <p>From: {{ entry.from }}</p>
+        <p>To: {{ entry.to }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Original Text</h2>
+        <p>{{ entry.original }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Translated Text</h2>
+        <p>{{ entry.translated }}</p>
+    </div>
+</body>
+</html>
