@@ -1,2 +1,8 @@
-# Automatic-Translator
-AI-powered multi-language translator built with FastAPI &amp; Google Cloud Translation API. Supports text &amp; file translation (PDF/DOCX), speech-to-text, multi-language text-to-speech, 48h auto-expiring history with delete/undo, and export to PDF/DOCX. Clean, responsive UI for seamless global communication.
+If you want to use this project to run on your local machine. 
+Here are some steps you have to do.
+#1    Make a static folder and place Amiri-Regular,DejaVuSans,scripting.js and style.css in that folder
+#2    Make a template folder and place all the html files in template folder\
+#3    main.py in you parent folder
+#Important to remember.
+I have created this project using Google Translation API key. So I have not provided my api key in Github. Because github doesnot allow this and also that I purchased that api-key for my project.
+The other thing is that training your own new models from the scratch is not easy and time taking and also requires GPU. If you have enough GPU like RTX 3090 you can train your own translation models that doesn't require api key and is free of cost. 
